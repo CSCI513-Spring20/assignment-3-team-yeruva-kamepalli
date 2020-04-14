@@ -16,17 +16,18 @@ public class ThreadPooling {
             m++;
         }
     }
-
+  // this method executes the task by adding the task to the thread and notifying it
     public void taskexecution(Task task) {
         synchronized (L) {
             L.add(task);
             L.notify();
         }
     }
+    //shuts down the thread
     public void shutdown() {
         this.close = true;
     }
-
+   //This class extends thread class and overrides run method to execute the task
     private class PerformanceTask extends Thread {
         public PerformanceTask(String name)
         {
@@ -60,6 +61,7 @@ public class ThreadPooling {
          }
      }
 }
+// abstract class is created to implement runnable class
 abstract class Task implements Runnable{
     String taskname;
     boolean isCompleted;
