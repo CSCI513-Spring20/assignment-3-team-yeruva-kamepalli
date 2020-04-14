@@ -34,10 +34,31 @@ public class ThreadPooling {
         }
         @Override
         public void run() {
-           
-        }
-    }
+        	 Task t;
 
+             while (true) {
+                 synchronized (L) {
+                     if (close && L.isEmpty()) {
+                         break;
+                     }
+                     while (L.isEmpty()) {
+                         try {
+                             L.wait();
+                         } catch (InterruptedException e) {
+                             System.out.println( e.getMessage());
+                         }
+                     }
+                     t = (Task) L.poll();
+                 }
+                 try {
+                     t.run();
+                     t.setIsCompleted();
+                 } catch (RuntimeException e) {
+                     System.out.println( e.getMessage());
+                 }
+             }
+         }
+     }
 }
 abstract class Task implements Runnable{
     String taskname;
